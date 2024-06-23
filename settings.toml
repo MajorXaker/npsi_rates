@@ -1,0 +1,34 @@
+[default]
+    DATABASE_PORT = "5432"
+    DATABASE_USER = "postgres"
+    DATABASE_PASSWORD = "postgres"
+    DATABASE_DB = "nbrb_rates_system"
+    DATABASE_HOST = "localhost"
+    DATABASE_ECHO_MODE = false
+
+    LOG_TO_CONSOLE = true
+    LOG_TO_FILE = false
+    LOG_TO_SENTRY = false
+    JSON_LOGS = false
+
+    ENABLE_DOCS = true
+
+
+[test]
+    DATABASE_HOST = "postgres"
+    DATABASE_DB = "test_nbrb"
+
+
+[development]
+    JSON_LOGS = true
+    DATABASE_ECHO_MODE = false
+
+
+[production]
+    ENABLE_DOCS = false
+    JSON_LOGS = true
+
+    DATABASE_ECHO_MODE = false
+
+[global]
+    PROJECT_NAME = "nbrb_rates_downloader"

@@ -1,0 +1,27 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+asyncpg = "*"
+dynaconf = "==3.1.7"
+fastapi = "*"
+pydantic = { extras = ["email"], version = "==2.7.4" }
+uvicorn = { extras = ["standard"], version = "*" }
+SQLAlchemy = { extras = ["asyncio"], version = "==2.0.31" }
+starlette-graphene3 = "*"
+python-json-logger = "*"
+httpx = "*"
+alembic = "==1.13.1"
+psycopg2-binary = "*"
+
+[dev-packages]
+pytest-asyncio = "==0.15.1"
+pytest = "==6.2.5"
+black = "*"
+coverage = { extras = ["toml"], version = "*" }
+
+[pipenv]
+allow_prereleases = false
+python_version = "3.11"

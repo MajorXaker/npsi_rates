@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres-nbrb-rates
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: nbrb_rates_system
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+
