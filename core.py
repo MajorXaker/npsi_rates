@@ -33,14 +33,16 @@ async def main():
             async with AsyncSession(persistent_engine) as session, session.begin():
                 time_to_collect_data = await get_data_collection_time(session)
 
-                if configs.step == 4 and await time_left_for_collection(
-                    time_to_collect_data
-                ) < time(hour=1):
+                if (
+                    configs.step == 4
+                    and (await time_left_for_collection(time_to_collect_data)).seconds
+                    < 3600
+                ):
                     await update_step_in_db(session, 0)
                 elif (
-                    await time_left_for_collection(time_to_collect_data)
-                    < time(minute=1)
-                    and configs.step == 0
+                    configs.step == 0
+                    and (await time_left_for_collection(time_to_collect_data)).seconds
+                    < 60
                 ):
                     await update_step_in_db(session, 1)
                     nbrb_rates = await celery_execute(get_rates)
