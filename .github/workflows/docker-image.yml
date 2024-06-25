@@ -1,0 +1,96 @@
+name: Bakery Deployment Workflow
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  black:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: psf/black@stable
+
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.11-buster
+    env:
+      ENV_FOR_DYNACONF: test
+    services:
+      postgres:
+        # Docker Hub image
+        image: postgres:13
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: pytest
+        run: |
+          echo "[test]">> .secrets.toml
+          echo "\tDATABASE_HOST = 'postgres'">> .secrets.toml
+          echo "\tDATABASE_PASSWORD = 'postgres'">> .secrets.toml
+          echo "\tPOSTGRES_USER = 'postgres'">> .secrets.toml
+          echo "\tPOSTGRES_DB = 'test_bakery'">> .secrets.toml
+          cat .secrets.toml
+          pip install pipenv
+          pipenv install --deploy --system --dev
+          python -m tests.setup_test_db
+          coverage run -m pytest
+          coverage report -m --skip-covered
+
+#  build-and-push-dev-image:
+#    needs: test
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: read
+#      packages: write
+#
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v3
+#
+#      - name: Log in to the Container registry
+#        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+#        with:
+#          registry: ${{ env.REGISTRY }}
+#          username: ${{ github.actor }}
+#          password: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Extract metadata (tags, labels) for Docker
+#        id: meta
+#        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+#        with:
+#          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+#
+#      - name: Build and push Docker image
+#        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+#        with:
+#          context: .
+#          push: true
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: ${{ steps.meta.outputs.labels }}
+#          build-args: |
+#            ENV_FOR_DYNACONF=development
+#            DATABASE_HOST=${{ secrets.DB_HOST }}
+#            DATABASE_USER=${{ secrets.DB_USER }}
+#            DATABASE_PASSWORD=${{ secrets.DB_PASSWORD }}
+
