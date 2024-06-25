@@ -6,6 +6,22 @@
     DATABASE_HOST = "localhost"
     DATABASE_ECHO_MODE = false
 
+    RABBITMQ_HOST = "localhost"
+    RABBITMQ_PORT = "5672"
+    RABBITMQ_USERNAME = "username" # placeholders
+    RABBITMQ_PASSWORD = "password" # placeholders
+
+    QUEUE_FOR_NEW_DATA = "worker"
+    QUEUE_FOR_PROCESSED_DATA = "core"
+
+    NO_CONFIG_IDLE_TIME = 300
+
+    SMTP_SERVER = ""
+    SMTP_PORT = ""
+    SMTP_LOGIN = ""
+    SMTP_PASSWORD = ""
+    USE_SSL = true
+
     LOG_TO_CONSOLE = true
     LOG_TO_FILE = false
     LOG_TO_SENTRY = false

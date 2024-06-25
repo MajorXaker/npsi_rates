@@ -1,13 +1,12 @@
 import uvicorn as uvicorn
-
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
+from api.config import config_router
+from api.email import email_router
 from api.healthcheck import root_router
 from api.rates import rates_router
 from config import settings
-from db import persistent_engine
-from models.db_models.base_engine import Model
 
 docs_conf = {"docs_url": None, "redoc_url": None, "openapi_url": None}
 if settings.ENABLE_DOCS:
@@ -37,7 +36,8 @@ middlewares = [
 
 app.include_router(root_router)
 app.include_router(rates_router)
-
+app.include_router(config_router)
+app.include_router(email_router)
 
 if __name__ == "__main__":
     uvicorn.run(

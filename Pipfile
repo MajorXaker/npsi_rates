@@ -15,6 +15,10 @@ python-json-logger = "*"
 httpx = "*"
 alembic = "==1.13.1"
 psycopg2-binary = "*"
+pika = "*"
+aio-pika = "*"
+freezegun = "*"
+celery = "*"
 
 [dev-packages]
 pytest-asyncio = "==0.15.1"

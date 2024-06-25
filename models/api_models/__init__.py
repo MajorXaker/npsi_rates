@@ -1,1 +1,2 @@
-from .rate import Rate
+from .rate import Rate, RatesResponse
+from .config import Config

@@ -1,7 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict, AliasChoices
 
 """{
     "Cur_ID": 510,
@@ -14,29 +14,27 @@ from pydantic import BaseModel, Field
 
 
 class Rate(BaseModel):
-    cur_id: int = Field(serialization_alias="Cur_ID")
-    date: datetime = Field(serialization_alias="Date")
-    cur_abbreviation: str = Field(serialization_alias="Cur_Abbreviation")
-    cur_scale: int = Field(serialization_alias="Cur_Scale")
-    cur_name: str = Field(serialization_alias="Cur_Name")
-    cur_official_rate: Decimal = Field(serialization_alias="Cur_OfficialRate")
+    Cur_ID: int
+    Date: datetime
+    Cur_Abbreviation: str
+    Cur_Scale: int
+    Cur_Name: str
+    Cur_OfficialRate: Decimal
 
     @classmethod
     def from_db_model(
         cls,
-        external_id: int,
-        on_date: date,
-        abbreviation: str,
-        scale: float,
-        name: str,
-        official_rate: float,
-        **kwargs,
+        database_row,
     ):
         return cls(
-            cur_id=external_id,
-            date=on_date,
-            cur_abbreviation=abbreviation,
-            cur_scale=scale,
-            cur_name=name,
-            cur_official_rate=official_rate,
+            Cur_ID=database_row.external_id,
+            Date=database_row.on_date,
+            Cur_Abbreviation=database_row.abbreviation,
+            Cur_Scale=database_row.scale,
+            Cur_Name=database_row.name,
+            Cur_OfficialRate=database_row.official_rate,
         )
+
+
+class RatesResponse(BaseModel):
+    rates: list[Rate]

@@ -44,3 +44,10 @@ async def ro_session() -> AsyncConnection:
 
 ro_session_dep: AsyncConnection = Depends(ro_session)
 ro_session = asynccontextmanager(ro_session)
+
+RABBITMQ_CONNECTION_URL = (
+    f"amqp://{settings.RABBITMQ_USERNAME}:"
+    f"{settings.RABBITMQ_PASSWORD}@"
+    f"{settings.RABBITMQ_HOST}:"
+    f"{settings.RABBITMQ_PORT}"
+)
