@@ -15,15 +15,16 @@ async def get_data_collection_time(session: AsyncSession) -> sa.Time:
 
 async def time_left_for_collection(scheduled_time: datetime.time):
     current_time = datetime.utcnow()
-    current_time = timedelta(
+    current_timedelta = timedelta(
         seconds=current_time.second,
         minutes=current_time.minute,
         hours=current_time.hour,
     )
-    scheduled_time = timedelta(
+
+    scheduled_timedelta = timedelta(
         seconds=scheduled_time.second,
         minutes=scheduled_time.minute,
         hours=scheduled_time.hour,
     )
 
-    return scheduled_time - current_time
+    return scheduled_timedelta - current_timedelta

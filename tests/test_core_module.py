@@ -25,13 +25,13 @@ async def test_get_time(dbsession):
 
     frozen_time = datetime(2024, 1, 1, 11, 48, 0)
     with freeze_time(frozen_time):
-        time_to_collect_data = await time_left_for_collection(time_to_collect_data)
-        assert time_to_collect_data == timedelta(seconds=720)
+        time_left = await time_left_for_collection(time_to_collect_data)
+        assert time_left == timedelta(seconds=720)
 
     frozen_time = datetime(2024, 1, 1, 11, 56, 0)
     with freeze_time(frozen_time):
-        time_to_collect_data = await time_left_for_collection(time_to_collect_data)
-        assert time_to_collect_data == timedelta(seconds=240)
+        time_left = await time_left_for_collection(time_to_collect_data)
+        assert time_left == timedelta(seconds=240)
 
 
 @pytest.mark.asyncio
