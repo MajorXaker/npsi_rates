@@ -30,4 +30,4 @@ RUN echo "\tSMTP_PASSWORD = ${SMTP_PASSWORD}">> .secrets.toml
 
 
 USER $USER_CONTAINER
-CMD python main.py
+CMD python api_main.py
