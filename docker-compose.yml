@@ -6,9 +6,9 @@ services:
     container_name: postgres-nbrb-rates
     volumes:
       - ./data/postgres:/var/lib/postgresql/data/pgdata
+    env_file:
+      - ./database.env
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
       POSTGRES_DB: nbrb_rates_system
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
@@ -18,13 +18,34 @@ services:
     image: rabbitmq:3.10.7-management
     hostname: rabbitmq
     restart: always
+    env_file:
+      - ./rabbitmq.env
     environment:
-      - RABBITMQ_DEFAULT_USER=rmuser
-      - RABBITMQ_DEFAULT_PASS=rmpassword
       - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}] disk_free_limit 2147483648
     volumes:
       - ./rabbitmq:/var/lib/rabbitmq
     ports:
-      - 15672:15672
-      - 5672:5672
+      - "15672:15672"
+      - "5672:5672"
+
+  api:
+    container_name: api
+    image: ghcr.io/majorxaker/npsi_rates:main
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+
+  core:
+    container_name: api
+    image: ghcr.io/majorxaker/npsi_rates/core:main
+    env_file:
+      - ./.env
+
+  worker:
+    container_name: api
+    image: ghcr.io/majorxaker/npsi_rates/worker:main
+    env_file:
+      - ./.env
+
 

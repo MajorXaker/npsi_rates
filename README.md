@@ -15,12 +15,24 @@ version: '2'
 
 services: 
   api:
-    container_name: api
-    image: ghcr.io/majorxaker/bakery_engine:main
+    container_name: nbrb_api
+    image: ghcr.io/majorxaker/npsi_rates:main
     env_file:
       - ./.env
     ports:
       - "8000:8000"
+
+  core:
+    container_name: nbrb_core
+    image: ghcr.io/majorxaker/npsi_rates/core:main
+    env_file:
+      - ./.env
+  
+  worker:
+    container_name: nbrb_worker
+    image: ghcr.io/majorxaker/npsi_rates/worker:main
+    env_file:
+      - ./.env
 ```
 - (optional) Add launch options for RabbitMQ and Postgres to your docker-compose file. Attach correct environment variables
 - Create .env file for api and worker, replace asterisks with your values
