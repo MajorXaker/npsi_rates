@@ -27,6 +27,8 @@
     LOG_TO_SENTRY = false
     JSON_LOGS = false
 
+    CORE_ALIVE_FILE_PATH = "/tmp/core_alive"
+
     ENABLE_DOCS = true
 
 
