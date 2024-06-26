@@ -1,7 +1,8 @@
 import uvicorn as uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from starlette.middleware.cors import CORSMiddleware
 
+from api.auth import security
 from api.config import config_router
 from api.email import email_router
 from api.healthcheck import root_router
@@ -19,6 +20,7 @@ app = FastAPI(
     version="0.0.1",
     title=settings.PROJECT_NAME,
     description="NBRB microservices family",
+    dependencies=[Depends(security)],
     **docs_conf,
 )
 

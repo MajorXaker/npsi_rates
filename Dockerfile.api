@@ -27,6 +27,8 @@ RUN echo "\tRABBITMQ_USERNAME = ${RABBITMQ_USERNAME}">> .secrets.toml
 RUN echo "\tRABBITMQ_PASSWORD = ${RABBITMQ_PASSWORD}">> .secrets.toml
 RUN echo "\tSMTP_LOGIN = ${SMTP_LOGIN}">> .secrets.toml
 RUN echo "\tSMTP_PASSWORD = ${SMTP_PASSWORD}">> .secrets.toml
+RUN echo "\tWEB_LOGIN = ${tWEB_LOGIN}">> .secrets.toml
+RUN echo "\tWEB_PASSWORD = ${tWEB_PASSWORD}">> .secrets.toml
 
 
 USER $USER_CONTAINER
