@@ -66,11 +66,11 @@ jobs:
     strategy:
       matrix:
         app: [ 'core', 'api', 'worker' ]
-        dockerfile: |
-          -./Dockerfile.core
-          -./Dockerfile.api
-          -./Dockerfile.worker
-        image_name: |
+        dockerfile:
+          - Dockerfile.core
+          - Dockerfile.api
+          - Dockerfile.worker
+        image_name:
           - ${GITHUB_REPOSITORY}/core:${{ github.sha }}
           - ${GITHUB_REPOSITORY}/api:${{ github.sha }}
           - ${GITHUB_REPOSITORY}/worker:${{ github.sha }}
