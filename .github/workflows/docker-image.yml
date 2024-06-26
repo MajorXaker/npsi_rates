@@ -66,14 +66,6 @@ jobs:
     strategy:
       matrix:
         app: [ 'core', 'api', 'worker' ]
-        dockerfile:
-          - Dockerfile.core
-          - Dockerfile.api
-          - Dockerfile.worker
-        image_name:
-          - ${GITHUB_REPOSITORY}/core:${{ github.sha }}
-          - ${GITHUB_REPOSITORY}/api:${{ github.sha }}
-          - ${GITHUB_REPOSITORY}/worker:${{ github.sha }}
 
     steps:
       - name: Checkout repository
@@ -93,13 +85,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ matrix.image_name }}
+          images: ${GITHUB_REPOSITORY}/${{ matrix.app }}:${{ github.sha }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
           context: .
-          file: ${{ matrix.dockerfile }}
+          file: Dockerfile.${{ matrix.app }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
