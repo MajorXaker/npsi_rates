@@ -8,7 +8,7 @@ from config import settings
 security = HTTPBasic()
 
 
-def verify_credentials(credentials: HTTPBasicCredentials = Depends(security)):
+def auth(credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, settings.WEB_LOGIN)
     correct_password = secrets.compare_digest(
         credentials.password, settings.WEB_PASSWORD

@@ -1,4 +1,5 @@
 import asyncio
+import base64
 
 import pytest
 from httpx import AsyncClient
@@ -69,3 +70,11 @@ async def test_client_rest(dbsession: AsyncSession) -> AsyncClient:
 @pytest.fixture
 def creator(dbsession) -> Creator:
     return Creator(dbsession)
+
+
+@pytest.fixture
+def auth_token() -> str:
+    return (
+        "Basic "
+        + base64.b64encode(f"{st.WEB_LOGIN}:{st.WEB_PASSWORD}".encode()).decode()
+    )

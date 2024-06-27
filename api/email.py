@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 import sqlalchemy as sa
 import models.db_models as m
+from api.auth import auth
 from db import get_session_dep
 from models.api_models.email import (
     EmailCreatedResponse,
@@ -13,7 +14,9 @@ from models.api_models.email import (
 email_router = APIRouter()
 
 
-@email_router.post("/email_recipients", tags=["email_recipients"])
+@email_router.post(
+    "/email_recipients", tags=["email_recipients"], dependencies=[Depends(auth)]
+)
 async def add_email_recipient(
     email: str,
     db: AsyncSession = get_session_dep,
@@ -43,7 +46,9 @@ async def delete_email_recipient(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@email_router.get("/email_recipients", tags=["email_recipients"])
+@email_router.get(
+    "/email_recipients", tags=["email_recipients"], dependencies=[Depends(auth)]
+)
 async def get_email_recipients(
     db: AsyncSession = get_session_dep,
 ) -> EmailsResponse:

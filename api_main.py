@@ -20,7 +20,6 @@ app = FastAPI(
     version="0.0.1",
     title=settings.PROJECT_NAME,
     description="NBRB microservices family",
-    dependencies=[Depends(security)],
     **docs_conf,
 )
 

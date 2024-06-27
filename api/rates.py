@@ -1,21 +1,20 @@
 import sqlalchemy as sa
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from api.auth import auth
 from db import get_session_dep
 from models import api_models as am
 from models import db_models as m
 from models.api_models.rate import RatesResponse
 
 rates_router = APIRouter()
-# TODO Auth
 
 
-@rates_router.get("/rates", tags=["rates"])
+@rates_router.get("/rates", tags=["rates"], dependencies=[Depends(auth)])
 async def get_rates(
     db: AsyncSession = get_session_dep,
 ) -> RatesResponse:
-    # TODO Return schema
     # TODO Pagination
     data = (
         await db.execute(

@@ -11,9 +11,6 @@
     RABBITMQ_USERNAME = "username" # placeholders
     RABBITMQ_PASSWORD = "password" # placeholders
 
-    QUEUE_FOR_NEW_DATA = "worker"
-    QUEUE_FOR_PROCESSED_DATA = "core"
-
     NO_CONFIG_IDLE_TIME = 300
 
     SMTP_SERVER = ""
@@ -36,6 +33,8 @@
     DATABASE_HOST = "postgres"
     DATABASE_DB = "test_nbrb"
 
+    WEB_LOGIN = "root"
+    WEB_PASSWORD = "root"
 
 [development]
     JSON_LOGS = true
