@@ -1,13 +1,13 @@
 import uvicorn as uvicorn
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from api.auth import security
 from api.config import config_router
 from api.email import email_router
 from api.healthcheck import root_router
 from api.rates import rates_router
 from config import settings
+from utils.requests_interceptor import RequestsLoggingMiddleware
 
 docs_conf = {"docs_url": None, "redoc_url": None, "openapi_url": None}
 if settings.ENABLE_DOCS:
@@ -31,9 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-middlewares = [
-    # AuthMiddleware(),
-]
+app.add_middleware(RequestsLoggingMiddleware)
 
 app.include_router(root_router)
 app.include_router(rates_router)

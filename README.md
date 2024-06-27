@@ -55,6 +55,11 @@ SMTP_PASSWORD=***
 ```shell
 docker-compose up -d
 ```
+- Enter API container and run alembic migration to create tables in DB
+```shell
+docker container <container_id> exec bash
+alembic upgrade head
+ ```
 - (optionally) Configure your reverse proxy to make API available from outside
 - Send POST to /config to initiate whole system. See /docs endpoint to get more information on schema
 - Send POST to /email_recipients to add an email to mailing list
