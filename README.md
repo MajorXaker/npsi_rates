@@ -50,6 +50,8 @@ SMTP_SERVER=***
 SMTP_PORT=***
 SMTP_LOGIN=***
 SMTP_PASSWORD=***
+WEB_LOGIN=***
+WEB_PASSWORD=***
 ```
 - Pull, build and launch containers
 ```shell
