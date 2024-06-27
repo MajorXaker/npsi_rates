@@ -9,7 +9,7 @@ from api_main import app
 from config import settings as st
 from db import get_session_dep
 from models.db_models import Model
-from utils.requests_interceptor import RequestsLoggingMiddleware
+from utils.request_logging_middleware import RequestsLoggingMiddleware
 from .creator import Creator
 
 import sqlalchemy as sa
