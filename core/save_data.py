@@ -6,6 +6,19 @@ from datetime import datetime
 
 
 async def save_rates(session: AsyncSession, rates: list[dict]):
+    """
+    Saves a list of rates to the database.
+
+    Args:
+        session (AsyncSession): The SQLAlchemy AsyncSession object.
+        rates (list[dict]): A list of dictionaries representing the rates.
+
+    Returns:
+        None
+
+    Raises:
+        None
+    """
     external_id_internal_id_mapping_q = sa.select(
         m.Currency.external_id, m.Currency.id
     ).where(m.Currency.external_id.in_([rate["Cur_ID"] for rate in rates]))

@@ -4,7 +4,16 @@ import io
 from models import api_models as am
 
 
-def create_report_file(content: list[am.Rate]):
+def create_report_file(content: list[am.Rate]) -> io.StringIO:
+    """
+    Create a report file based on the provided content.
+
+    Parameters:
+        content (list[am.Rate]): The list of Rate objects to be included in the report.
+
+    Returns:
+        memory_file (io.StringIO): The in-memory file containing the report data.
+    """
     if not content:
         return None
     memory_file = io.StringIO()

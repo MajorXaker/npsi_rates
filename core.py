@@ -1,10 +1,10 @@
 import asyncio
-from datetime import time
 
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from c_worker.fetch_data_nbrb import get_rates
+from c_worker.send_rates import send_rates
 from config import settings as s, log
 from core.check_dynamic_configs import check_dynamic_configs
 from core.save_data import save_rates
@@ -17,6 +17,17 @@ from utils.step_handler import update_step_in_db
 
 
 async def main():
+    """
+    The main function of the CORE module. It runs an infinite loop that checks for dynamic configurations,
+    performs data collection and email sending based on the step value in the configurations,
+    and handles exceptions. The function uses celery to perform asynchronous tasks.
+
+    Parameters:
+    None
+
+    Returns:
+    None
+    """
     log.info("Core module started")
     while True:
         healthcheck_task = asyncio.create_task(healthcheck())
@@ -25,7 +36,7 @@ async def main():
                 configs = await check_dynamic_configs(session)
             if not configs:
                 log.info(
-                    f"No configs awailable. Core module sleeping {s.NO_CONFIG_IDLE_TIME}"
+                    f"No configs available. Core module sleeping {s.NO_CONFIG_IDLE_TIME}"
                 )
                 await asyncio.sleep(s.NO_CONFIG_IDLE_TIME)
                 continue
@@ -59,7 +70,7 @@ async def main():
                         ).fetchall()
 
                         is_ok = await celery_execute(
-                            get_rates, recipients=recipients, rates=nbrb_rates
+                            send_rates, recipients=recipients, rates=nbrb_rates
                         )
                         if is_ok:
                             log.info(f"Emails sent to {len(recipients)} recipients")

@@ -18,6 +18,10 @@ args = my_parser.parse_args()
 
 
 def test_api_alive():
+    """
+    A function to test the API's liveliness by making a request to http://127.0.0.1:8000/healthcheck,
+    and exiting with status code 0 if the response status is 200 and message is "OK"; otherwise, exiting with status code 1.
+    """
     try:
         with urlopen("http://127.0.0.1:8000/healthcheck") as resp:
             if resp.status == 200 and resp.msg == "OK":
@@ -29,6 +33,20 @@ def test_api_alive():
 
 
 def test_file_alive():
+    """
+    This function tests the existence and deletion of a file specified by the `CORE_ALIVE_FILE_PATH` setting.
+
+    This function attempts to open the file specified by `CORE_ALIVE_FILE_PATH` in read mode.
+    If the file exists and can be opened, the function exits with a status code of 1.
+    If the file does not exist or cannot be opened, the function exits with a status code of 1.
+    After successfully opening the file, the function deletes the file and exits with a status code of 0.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
     try:
         with open(s.CORE_ALIVE_FILE_PATH, "r") as f:
             pass
