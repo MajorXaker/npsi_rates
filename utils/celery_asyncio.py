@@ -25,7 +25,7 @@ async def celery_execute(func: callable, *args, **kwargs):
     successful, it raises an exception with the task info.
     """
     log.info(f"Executing celery task: {func.__name__}")
-    task: AsyncResult = func.delay(args=args, kwargs=kwargs)
+    task: AsyncResult = func.delay(*args, **kwargs)
     while not task.ready():
         await sleep(1)
     if task.successful():
