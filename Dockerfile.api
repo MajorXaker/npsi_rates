@@ -20,13 +20,8 @@ HEALTHCHECK --interval=5m --timeout=10s \
 
 RUN echo "[${ENV_FOR_DYNACONF}]">> .secrets.toml
 RUN echo "tDATABASE_HOST = ${DATABASE_HOST}">> .secrets.toml
-RUN echo "\tDATABASE_PASSWORD = ${DATABASE_PASSWORD}">> .secrets.toml
-RUN echo "\tPOSTGRES_USER = ${DATABASE_USER}">> .secrets.toml
-RUN echo "\tRABBITMQ_HOST = ${RABBITMQ_HOST}">> .secrets.toml
-RUN echo "\tRABBITMQ_USERNAME = ${RABBITMQ_USERNAME}">> .secrets.toml
-RUN echo "\tRABBITMQ_PASSWORD = ${RABBITMQ_PASSWORD}">> .secrets.toml
-RUN echo "\tSMTP_LOGIN = ${SMTP_LOGIN}">> .secrets.toml
-RUN echo "\tSMTP_PASSWORD = ${SMTP_PASSWORD}">> .secrets.toml
+RUN echo "\tDATABASE_PASSWORD = ${POSTGRES_PASSWORD}">> .secrets.toml
+RUN echo "\tDATABASE_USER = ${POSTGRES_USER}">> .secrets.toml
 RUN echo "\tWEB_LOGIN = ${tWEB_LOGIN}">> .secrets.toml
 RUN echo "\tWEB_PASSWORD = ${tWEB_PASSWORD}">> .secrets.toml
 

@@ -7,7 +7,7 @@ services:
     volumes:
       - ./data/postgres:/var/lib/postgresql/data/pgdata
     env_file:
-      - ./database.env
+      - ./.env
     environment:
       POSTGRES_DB: nbrb_rates_system
       PGDATA: /var/lib/postgresql/data/pgdata
@@ -19,7 +19,7 @@ services:
     hostname: rabbitmq
     restart: always
     env_file:
-      - ./rabbitmq.env
+      - ./.env
     environment:
       - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}] disk_free_limit 2147483648
     volumes:
