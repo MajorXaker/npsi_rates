@@ -28,6 +28,8 @@
 
     ENABLE_DOCS = true
 
+    PROJECT_NAME = "nbrb_rates_downloader"
+
 
 [test]
     DATABASE_HOST = "postgres"
@@ -42,7 +44,3 @@
 [production]
     ENABLE_DOCS = false
     JSON_LOGS = true
-
-
-[global]
-    PROJECT_NAME = "nbrb_rates_downloader"
