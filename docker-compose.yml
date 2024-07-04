@@ -29,21 +29,21 @@ services:
       - "5672:5672"
 
   api:
-    container_name: api
-    image: ghcr.io/majorxaker/npsi_rates:main
+    container_name: nbrb-api
+    image: ghcr.io/majorxaker/npsi_rates/api:main
     env_file:
       - ./.env
     ports:
       - "8000:8000"
 
   core:
-    container_name: api
+    container_name: nbrb-core
     image: ghcr.io/majorxaker/npsi_rates/core:main
     env_file:
       - ./.env
 
   worker:
-    container_name: api
+    container_name: nbrb-worker
     image: ghcr.io/majorxaker/npsi_rates/worker:main
     env_file:
       - ./.env
