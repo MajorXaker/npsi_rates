@@ -58,23 +58,21 @@ async def main():
                     await update_step_in_db(session, 1)
                     nbrb_rates = await celery_execute(get_rates)
                     await update_step_in_db(session, 2)
-                    async with (
-                        AsyncSession(persistent_engine) as session,
-                        session.begin(),
-                    ):
-                        await save_rates(session, nbrb_rates)
-                        await update_step_in_db(session, 3)
 
-                        recipients = (
-                            await session.scalars(sa.select(m.EmailRecipient.email))
-                        ).fetchall()
+                    await save_rates(session, nbrb_rates)
+                    await update_step_in_db(session, 3)
 
-                        is_ok = await celery_execute(
-                            send_rates, recipients=recipients, rates=nbrb_rates
-                        )
-                        if is_ok:
-                            log.info(f"Emails sent to {len(recipients)} recipients")
-                        await update_step_in_db(session, 4)
+                    recipients = (
+                        await session.scalars(sa.select(m.EmailRecipient.email))
+                    ).fetchall()
+                    log.info(f"Sending emails to {len(recipients)} recipients")
+
+                    is_ok = await celery_execute(
+                        send_rates, recipients=recipients, rates=nbrb_rates
+                    )
+                    if is_ok:
+                        log.info(f"Emails sent to {len(recipients)} recipients")
+                    await update_step_in_db(session, 4)
 
                 else:
                     log.info(
