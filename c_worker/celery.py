@@ -5,7 +5,7 @@ celery_worker = Celery(
     "nbrb_rates_worker",
     broker=RABBITMQ_CONNECTION_URL,
     backend="rpc://",
-    include=["c_worker.fetch_data_nbrb"],
+    include=["c_worker.fetch_data_nbrb", "c_worker.send_rates"],
 )
 
 # Optional configuration, see the application user guide.
