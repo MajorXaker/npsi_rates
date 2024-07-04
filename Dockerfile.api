@@ -18,13 +18,5 @@ RUN find $WORKDIR_PATH -type d -exec chmod 755 {} \;
 HEALTHCHECK --interval=5m --timeout=10s \
   CMD python healthcheck_probe.py
 
-RUN echo "[${ENV_FOR_DYNACONF}]">> .secrets.toml
-RUN echo "tDATABASE_HOST = ${DATABASE_HOST}">> .secrets.toml
-RUN echo "\tDATABASE_PASSWORD = ${POSTGRES_PASSWORD}">> .secrets.toml
-RUN echo "\tDATABASE_USER = ${POSTGRES_USER}">> .secrets.toml
-RUN echo "\tWEB_LOGIN = ${tWEB_LOGIN}">> .secrets.toml
-RUN echo "\tWEB_PASSWORD = ${tWEB_PASSWORD}">> .secrets.toml
-
-
 USER $USER_CONTAINER
 CMD python api_main.py

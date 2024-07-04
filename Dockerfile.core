@@ -18,16 +18,12 @@ RUN find $WORKDIR_PATH -type d -exec chmod 755 {} \;
 HEALTHCHECK --interval=3m --timeout=30s \
   CMD python healthcheck_probe.py -f
 
-RUN echo "[${ENV_FOR_DYNACONF}]">> .secrets.toml
-RUN echo "tDATABASE_HOST = ${DATABASE_HOST}">> .secrets.toml
-RUN echo "\tDATABASE_PASSWORD = ${POSTGRES_PASSWORD}">> .secrets.toml
-RUN echo "\tDATABASE_USER = ${POSTGRES_USER}">> .secrets.toml
-RUN echo "\tRABBITMQ_HOST = ${RABBITMQ_HOST}">> .secrets.toml
-RUN echo "\tRABBITMQ_USERNAME = ${RABBITMQ_DEFAULT_USER}">> .secrets.toml
-RUN echo "\tRABBITMQ_PASSWORD = ${RABBITMQ_DEFAULT_PASS}">> .secrets.toml
-RUN echo "\tSMTP_LOGIN = ${SMTP_LOGIN}">> .secrets.toml
-RUN echo "\tSMTP_PASSWORD = ${SMTP_PASSWORD}">> .secrets.toml
-RUN cat .secrets.toml
-
 USER $USER_CONTAINER
-CMD python core.py
+CMD ["sh", "-c", "echo \"[${ENV_FOR_DYNACONF}]\" > .secrets.toml && \
+             echo \"DATABASE_HOST = ${DATABASE_HOST}\" >> .secrets.toml && \
+             echo \"DATABASE_PASSWORD = ${POSTGRES_PASSWORD}\" >> .secrets.toml && \
+             echo \"DATABASE_USER = ${POSTGRES_USER}\" >> .secrets.toml && \
+             echo \"WEB_LOGIN = ${tWEB_LOGIN}\" >> .secrets.toml && \
+             echo \"WEB_PASSWORD = ${tWEB_PASSWORD}\" >> .secrets.toml && \
+             python api_main.py"]
+

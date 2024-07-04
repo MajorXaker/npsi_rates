@@ -15,13 +15,5 @@ COPY --chmod=0444 . .
 RUN find $WORKDIR_PATH -type d -exec chown $USER_CONTAINER:$USER_CONTAINER {} \;
 RUN find $WORKDIR_PATH -type d -exec chmod 755 {} \;
 
-RUN echo "[${ENV_FOR_DYNACONF}]">> .secrets.toml
-RUN echo "\tRABBITMQ_HOST = ${RABBITMQ_HOST}">> .secrets.toml
-RUN echo "\tRABBITMQ_USERNAME = ${RABBITMQ_DEFAULT_USER}">> .secrets.toml
-RUN echo "\tRABBITMQ_PASSWORD = ${RABBITMQ_DEFAULT_PASS}">> .secrets.toml
-RUN echo "\tSMTP_LOGIN = ${SMTP_LOGIN}">> .secrets.toml
-RUN echo "\tSMTP_PASSWORD = ${SMTP_PASSWORD}">> .secrets.toml
-
-
 USER $USER_CONTAINER
 CMD celery -A c_worker worker -l INFO  
