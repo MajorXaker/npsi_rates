@@ -1,4 +1,5 @@
 import asyncio
+from datetime import timedelta
 
 import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -43,23 +44,25 @@ async def main():
 
             async with AsyncSession(persistent_engine) as session, session.begin():
                 time_to_collect_data = await get_data_collection_time(session)
+                time_left = await time_left_for_collection(time_to_collect_data)
 
-                if (
-                    configs.step == 4
-                    and (await time_left_for_collection(time_to_collect_data)).seconds
-                    < 3600
-                ):
+            if (
+                configs.step == 4
+                and time_left < timedelta(3600)
+            ):
+                async with AsyncSession(persistent_engine) as session, session.begin():
                     await update_step_in_db(session, 0)
-                elif (
-                    configs.step == 0
-                    and (await time_left_for_collection(time_to_collect_data)).seconds
-                    < 60
-                ):
+            elif (
+                configs.step == 0
+                and time_left < timedelta(60)
+            ):
+                async with AsyncSession(persistent_engine) as session, session.begin():
                     await update_step_in_db(session, 1)
                     nbrb_rates = await celery_execute(get_rates)
                     await update_step_in_db(session, 2)
 
                     await save_rates(session, nbrb_rates)
+                    log.info("Data saved")
                     await update_step_in_db(session, 3)
 
                     recipients = (
@@ -74,11 +77,11 @@ async def main():
                         log.info(f"Emails sent to {len(recipients)} recipients")
                     await update_step_in_db(session, 4)
 
-                else:
-                    log.info(
-                        "Time to collect data is not reached. Core module sleeping 60 seconds"
-                    )
-                    await asyncio.sleep(60)
+            else:
+                log.info(
+                    "Time to collect data is not reached. Core module sleeping 60 seconds"
+                )
+                await asyncio.sleep(60)
 
         except Exception as exp:
             log.exception(exp)
