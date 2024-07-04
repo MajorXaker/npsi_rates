@@ -9,10 +9,19 @@ services:
     env_file:
       - ./.env
     environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
       POSTGRES_DB: nbrb_rates_system
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nbrb_services
 
   rabbitmq:
     image: rabbitmq:3.10.7-management
@@ -21,31 +30,81 @@ services:
     env_file:
       - ./.env
     environment:
+      - RABBITMQ_DEFAULT_USER=rmuser
+      - RABBITMQ_DEFAULT_PASS=rmpassword
       - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}] disk_free_limit 2147483648
     volumes:
       - ./rabbitmq:/var/lib/rabbitmq
     ports:
       - "15672:15672"
       - "5672:5672"
+    networks:
+      - nbrb_services
 
   api:
     container_name: nbrb-api
     image: ghcr.io/majorxaker/npsi_rates/api:main
-    env_file:
-      - ./.env
+    environment:
+      ENV_FOR_DYNACONF: development
+      DYNACONF_DATABASE_HOST: postgres
+      DYNACONF_DATABASE_PASSWORD: postgres
+      DYNACONF_DATABASE_USER: postgres
+      DYNACONF_DATABASE_DB: nbrb_rates_system
+      DYNACONF_WEB_LOGIN: admin
+      DYNACONF_WEB_PASSWORD: admin100500
+      DYNACOND_PROJECT_NAME: "nbrb_rates_downloader_api"
     ports:
       - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["sh", "-c", "alembic upgrade head && python api_main.py"]
+    networks:
+      - nbrb_services
 
   core:
     container_name: nbrb-core
     image: ghcr.io/majorxaker/npsi_rates/core:main
-    env_file:
-      - ./.env
+    environment:
+      ENV_FOR_DYNACONF: development
+      DYNACONF_DATABASE_HOST: postgres
+      DYNACONF_DATABASE_PASSWORD: postgres
+      DYNACONF_DATABASE_USER: postgres
+      DYNACONF_DATABASE_DB: nbrb_rates_system
+      DYNACONF_RABBITMQ_HOST: rabbitmq
+      DYNACONF_RABBITMQ_USERNAME: rmuser
+      DYNACONF_RABBITMQ_PASSWORD: rmpassword
+      DYNACOND_PROJECT_NAME: "nbrb_rates_downloader_core"
+
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - nbrb_services
 
   worker:
     container_name: nbrb-worker
     image: ghcr.io/majorxaker/npsi_rates/worker:main
-    env_file:
-      - ./.env
+    environment:
+      ENV_FOR_DYNACONF: development
+      DYNACONF_RABBITMQ_HOST: rabbitmq
+      DYNACONF_RABBITMQ_USERNAME: rmuser
+      DYNACONF_RABBITMQ_PASSWORD: rmpassword
+      DYNACONF_SMTP_LOGIN: "login"
+      DYNACONF_SMTP_PASSWORD: "password"
+      DYNACONF_SMTP_SERVER: localhost
+      DYNACONF_SMTP_PORT: 25
+      DYNACOND_PROJECT_NAME: "nbrb_rates_downloader_worker"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - nbrb_services
+
+networks:
+  nbrb_services:
+    external: false
+
+
 
 

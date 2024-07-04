@@ -11,7 +11,7 @@ async def get_currencies():
 
 
 @celery_worker.task
-def get_rates():
+def get_rates(*args, **kwargs):
     """
     Retrieves the exchange rates from the National Bank of the Republic of Belarus API.
 
