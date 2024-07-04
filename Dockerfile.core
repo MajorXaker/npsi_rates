@@ -27,7 +27,7 @@ RUN echo "\tRABBITMQ_USERNAME = ${RABBITMQ_DEFAULT_USER}">> .secrets.toml
 RUN echo "\tRABBITMQ_PASSWORD = ${RABBITMQ_DEFAULT_PASS}">> .secrets.toml
 RUN echo "\tSMTP_LOGIN = ${SMTP_LOGIN}">> .secrets.toml
 RUN echo "\tSMTP_PASSWORD = ${SMTP_PASSWORD}">> .secrets.toml
-cat .secrets.toml
+RUN cat .secrets.toml
 
 USER $USER_CONTAINER
 CMD python core.py
