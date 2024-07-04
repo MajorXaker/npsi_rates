@@ -51,8 +51,11 @@ async def main():
                     await asyncio.sleep(60)
                     continue
                 else:
-                    async with AsyncSession(persistent_engine) as session, session.begin():
-                        log.info('Resetting step to 0. New day started')
+                    async with (
+                        AsyncSession(persistent_engine) as session,
+                        session.begin(),
+                    ):
+                        log.info("Resetting step to 0. New day started")
                         await update_step_in_db(session, 0)
             elif configs.step == 0 and time_left < timedelta(60):
                 async with AsyncSession(persistent_engine) as session, session.begin():

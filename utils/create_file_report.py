@@ -17,7 +17,7 @@ def create_report_file(content: list[dict]) -> io.StringIO:
     if not content:
         return None
     memory_file = io.StringIO()
-    fieldnames = content[0]["properties"].keys()
+    fieldnames = content[0].keys()
     writer = csv.DictWriter(memory_file, fieldnames=fieldnames)
     writer.writeheader()
     for row in content:
