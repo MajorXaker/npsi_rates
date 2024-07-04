@@ -45,8 +45,10 @@ async def main():
             async with AsyncSession(persistent_engine) as session, session.begin():
                 time_to_collect_data = await get_data_collection_time(session)
                 time_left = await time_left_for_collection(time_to_collect_data)
-
-            if configs.step == 4 and time_left < timedelta(3600):
+            if configs.step == 4 and time_left.days == -1:
+                log.info("Data has been already collected today. Sleeping")
+                continue
+            elif configs.step == 4 and time_left < timedelta(3600):
                 async with AsyncSession(persistent_engine) as session, session.begin():
                     await update_step_in_db(session, 0)
             elif configs.step == 0 and time_left < timedelta(60):
