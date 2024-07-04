@@ -4,7 +4,7 @@ import io
 from models import api_models as am
 
 
-def create_report_file(content: list[am.Rate]) -> io.StringIO:
+def create_report_file(content: list[dict]) -> io.StringIO:
     """
     Create a report file based on the provided content.
 
@@ -17,10 +17,10 @@ def create_report_file(content: list[am.Rate]) -> io.StringIO:
     if not content:
         return None
     memory_file = io.StringIO()
-    fieldnames = content[0].schema()["properties"].keys()
+    fieldnames = content[0]["properties"].keys()
     writer = csv.DictWriter(memory_file, fieldnames=fieldnames)
     writer.writeheader()
     for row in content:
-        writer.writerow(row.dict())
+        writer.writerow(row)
     memory_file.seek(0)
     return memory_file

@@ -4,14 +4,13 @@ from decimal import Decimal
 
 import pytest
 
-from models import api_models as am
 from utils.create_file_report import create_report_file
 
 
 @pytest.mark.asyncio
 async def test_create_rates_file():
     rates = [
-        am.Rate(
+        dict(
             Cur_ID=1,
             Date=datetime(2022, 1, 1),
             Cur_Abbreviation="USD",
@@ -19,7 +18,7 @@ async def test_create_rates_file():
             Cur_Scale=1,
             Cur_OfficialRate=Decimal(1.5),
         ),
-        am.Rate(
+        dict(
             Cur_ID=1,
             Date=datetime(2022, 1, 2),
             Cur_Abbreviation="USD",
