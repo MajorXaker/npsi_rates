@@ -6,7 +6,7 @@ from utils.email_sender import email_handler
 
 
 @celery_worker.task
-def send_rates(recipients: list[str], rates: list[am.Rate]):
+def send_rates(recipients: list[str], rates: list[am.Rate], *args, **kwargs):
     try:
         attachment_data = create_report_file(rates)
         email_handler.send_email(
