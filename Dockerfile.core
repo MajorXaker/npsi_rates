@@ -19,11 +19,5 @@ HEALTHCHECK --interval=3m --timeout=30s \
   CMD python healthcheck_probe.py -f
 
 USER $USER_CONTAINER
-CMD ["sh", "-c", "echo \"[${ENV_FOR_DYNACONF}]\" > .secrets.toml && \
-             echo \"DATABASE_HOST = ${DATABASE_HOST}\" >> .secrets.toml && \
-             echo \"DATABASE_PASSWORD = ${POSTGRES_PASSWORD}\" >> .secrets.toml && \
-             echo \"DATABASE_USER = ${POSTGRES_USER}\" >> .secrets.toml && \
-             echo \"WEB_LOGIN = ${tWEB_LOGIN}\" >> .secrets.toml && \
-             echo \"WEB_PASSWORD = ${tWEB_PASSWORD}\" >> .secrets.toml && \
-             python api_main.py"]
+CMD python core.py
 
