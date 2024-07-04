@@ -47,6 +47,7 @@ async def main():
                 time_left = await time_left_for_collection(time_to_collect_data)
             if configs.step == 4 and time_left.days == -1:
                 log.info("Data has been already collected today. Sleeping")
+                await asyncio.sleep(60)
                 continue
             elif configs.step == 4 and time_left < timedelta(3600):
                 async with AsyncSession(persistent_engine) as session, session.begin():
